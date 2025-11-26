@@ -18,6 +18,7 @@ public class Paciente extends Persona {
     public HistoriaClinica getHistoriaClinica() {
         return historiaClinica;
     }
+    
 
     @Override
     public void mostrarInfo() {
