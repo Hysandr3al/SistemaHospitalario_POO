@@ -6,7 +6,7 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PacienteDAO implements InterfazCRUD{
+public class PacienteDAO implements InterfazCRUD<Paciente>{
     @Override
     public boolean registrar(Paciente p){
         String sql = "INSERT INTO Paciente(gruposanguineo, alergias, idPaciente, nombre, apellido, dni, telefono, direccion, sexo, edad)" + 
@@ -31,5 +31,5 @@ public class PacienteDAO implements InterfazCRUD{
             return false;
         }
     }
-    
+
 }
