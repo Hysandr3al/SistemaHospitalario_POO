@@ -2,9 +2,11 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package hospitaltalentofinanzas;
+package TalentoHumano;
 
 import java.util.*;
+import Sujetos.Empleado;  
+import java.util.Date;
 
 public class Personal {
     private Map<String, Empleado> empleados;
@@ -18,10 +20,12 @@ public class Personal {
         this.licencias = new HashMap<>();
         this.guardias = new HashMap<>();
     }
-
-    public void altaEmpleado(String idEmpleado, String nombre, String apellido, 
+    public void altaEmpleado(String idEmpleado, String nombres, String apellidos, 
+                           String telefono, String dni, String sexo, int edad,
                            String puesto, Date fechaIngreso, double salarioBase) {
-        Empleado nuevoEmpleado = new Empleado(idEmpleado, nombre, apellido, puesto, fechaIngreso, salarioBase);
+        Empleado nuevoEmpleado = new Empleado(idEmpleado, nombres, apellidos, 
+                                            telefono, dni, sexo, edad,
+                                            puesto, fechaIngreso, salarioBase);
         empleados.put(idEmpleado, nuevoEmpleado);
         legajos.put(idEmpleado, new ArrayList<>());
         licencias.put(idEmpleado, new ArrayList<>());
@@ -29,6 +33,15 @@ public class Personal {
         agregarAlLegajo(idEmpleado, "ALTA: Empleado dado de alta");
     }
 
+    // ✅ Mantener método viejo para compatibilidad (OPCIONAL)
+    public void altaEmpleadoBasico(String idEmpleado, String nombre, String apellido, 
+                                 String puesto, Date fechaIngreso, double salarioBase) {
+        // Usar valores por defecto para los campos de Persona
+        altaEmpleado(idEmpleado, nombre, apellido, "", "", "", 0, 
+                    puesto, fechaIngreso, salarioBase);
+    }
+
+    // Los demás métodos se mantienen igual...
     public void registrarLicencia(String idEmpleado, String tipoLicencia, 
                                 Date fechaInicio, Date fechaFin, String motivo) {
         if (!empleados.containsKey(idEmpleado)) return;
