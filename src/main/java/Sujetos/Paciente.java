@@ -19,6 +19,23 @@ public class Paciente extends Persona {
         return historiaClinica;
     }
     
+    
+    //getters y setters
+    public String getGrupoSanguineo() {
+        return grupoSanguineo;
+    }
+    public void setGrupoSanguineo(String grupoSanguineo) {
+        this.grupoSanguineo = grupoSanguineo;
+    }
+    public String getAlergias() {
+        return alergias;
+    }
+    public void setAlergias(String alergias) {
+        this.alergias = alergias;
+    }
+    public void setHistoriaClinica(HistoriaClinica historiaClinica) {
+        this.historiaClinica = historiaClinica;
+    }
 
     @Override
     public void mostrarInfo() {
