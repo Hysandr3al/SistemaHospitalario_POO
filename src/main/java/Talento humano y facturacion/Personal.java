@@ -2,56 +2,100 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package TalentoHumano;
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
+package hospitaltalentofinanzas;
 
-import java.util.*;
+import Sujetos.Persona;
+import java.util.Date;
 
-public class Personal {
-    private Map<String, Empleado> empleados;
-    private Map<String, List<String>> legajos;
-    private Map<String, List<String>> licencias;
-    private Map<String, List<String>> guardias;
+public class Empleado extends Persona {
+    private String idEmpleado;
+    private String puesto;
+    private Date fechaIngreso;
+    private boolean activo;
+    private double salarioBase;
 
-    public Personal() {
-        this.empleados = new HashMap<>();
-        this.legajos = new HashMap<>();
-        this.licencias = new HashMap<>();
-        this.guardias = new HashMap<>();
+    public Empleado(String idEmpleado, String nombres, String apellidos, 
+                   String telefono, String dni, String sexo, int edad,
+                   String puesto, Date fechaIngreso, double salarioBase) {
+        super(nombres, apellidos, telefono, dni, sexo, edad);
+        this.idEmpleado = idEmpleado;
+        this.puesto = puesto;
+        this.fechaIngreso = fechaIngreso;
+        this.activo = true;
+        this.salarioBase = salarioBase;
     }
 
-    public void altaEmpleado(String idEmpleado, String nombre, String apellido, 
-                           String puesto, Date fechaIngreso, double salarioBase) {
-        Empleado nuevoEmpleado = new Empleado(idEmpleado, nombre, apellido, puesto, fechaIngreso, salarioBase);
-        empleados.put(idEmpleado, nuevoEmpleado);
-        legajos.put(idEmpleado, new ArrayList<>());
-        licencias.put(idEmpleado, new ArrayList<>());
-        guardias.put(idEmpleado, new ArrayList<>());
-        agregarAlLegajo(idEmpleado, "ALTA: Empleado dado de alta");
+    @Override
+    public void mostrarInfo() {
+        System.out.println("=== INFORMACIÓN DEL EMPLEADO ===");
+        System.out.println("Empleado: " + nombres + " " + apellidos);
+        System.out.println("DNI: " + dni + " | ID Empleado: " + idEmpleado);
+        System.out.println("Puesto: " + puesto + " | Salario Base: $" + salarioBase);
+        System.out.println("Fecha de Ingreso: " + fechaIngreso);
+        System.out.println("Estado: " + (activo ? "ACTIVO" : "INACTIVO"));
+        System.out.println("Teléfono: " + telefono + " | Sexo: " + sexo + " | Edad: " + edad + " años");
+        System.out.println("=================================");
     }
 
-    public void registrarLicencia(String idEmpleado, String tipoLicencia, 
-                                Date fechaInicio, Date fechaFin, String motivo) {
-        if (!empleados.containsKey(idEmpleado)) return;
-        
-        String licencia = String.format("%s|%s|%s|%s", tipoLicencia, fechaInicio, fechaFin, motivo);
-        licencias.get(idEmpleado).add(licencia);
-        agregarAlLegajo(idEmpleado, "LICENCIA: " + tipoLicencia);
+    // Getters
+    public String getIdEmpleado() {
+        return idEmpleado;
     }
 
-    public void asignarGuardia(String idEmpleado, Date fecha, String turno, String sector) {
-        if (!empleados.containsKey(idEmpleado)) return;
-        
-        String guardia = String.format("%s|%s|%s", fecha, turno, sector);
-        guardias.get(idEmpleado).add(guardia);
-        agregarAlLegajo(idEmpleado, "GUARDIA: " + turno + " - " + sector);
+    public String getPuesto() {
+        return puesto;
     }
 
-    private void agregarAlLegajo(String idEmpleado, String registro) {
-        legajos.get(idEmpleado).add(registro + " - " + new Date());
+    public Date getFechaIngreso() {
+        return fechaIngreso;
     }
 
-    public Map<String, Empleado> getEmpleados() { return empleados; }
-    public Map<String, List<String>> getLicencias() { return licencias; }
-    public Map<String, List<String>> getGuardias() { return guardias; }
-    public Map<String, List<String>> getLegajos() { return legajos; }
+    public boolean isActivo() {
+        return activo;
+    }
+
+    public double getSalarioBase() {
+        return salarioBase;
+    }
+
+    // Setters
+    public void setIdEmpleado(String idEmpleado) {
+        this.idEmpleado = idEmpleado;
+    }
+
+    public void setPuesto(String puesto) {
+        this.puesto = puesto;
+    }
+
+    public void setFechaIngreso(Date fechaIngreso) {
+        this.fechaIngreso = fechaIngreso;
+    }
+
+    public void setActivo(boolean activo) {
+        this.activo = activo;
+    }
+
+    public void setSalarioBase(double salarioBase) {
+        this.salarioBase = salarioBase;
+    }
+    
+    // Métodos adicionales
+    public int calcularAntiguedad() {
+        if (fechaIngreso == null) return 0;
+        Date ahora = new Date();
+        long diffInMillis = ahora.getTime() - fechaIngreso.getTime();
+        return (int) (diffInMillis / (1000L * 60 * 60 * 24 * 365));
+    }
+    
+    public void desactivarEmpleado() {
+        this.activo = false;
+    }
+    
+    public void activarEmpleado() {
+        this.activo = true;
+    }
 }
