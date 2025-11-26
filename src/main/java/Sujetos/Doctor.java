@@ -16,7 +16,7 @@ public class Doctor extends Persona{
     }
 
     public RecetaMedica crearRecetaMedica(Paciente paciente){
-        return
+        return;
     }
 
     public String getEspecialidad(){
