@@ -109,7 +109,7 @@ public class PacienteDAO implements InterfazCRUD<Paciente>{
         List<Paciente> lista = new ArrayList<>();
         String sql = "SELECT * FROM Paciente";
 
-        try(Connection con = ConnectionDB.getConnection();
+        try(Connection con = ConexionDB.getConnection();
             PreparedStatement ps = con.prepareStatement(sql);
             ResultSet rs = ps.executeQuery()){
                 while(rs.next()){
