@@ -8,6 +8,9 @@ public class Paciente extends Persona {
     private int idPaciente;
     private String direccion;
 
+    public Paciente() {
+    }
+
     public Paciente(String nombres, String apellidos, String telefono, String dni,
                     String sexo, int edad, String grupoSanguineo, String alergias, int idPaciente, String direccion) {
 

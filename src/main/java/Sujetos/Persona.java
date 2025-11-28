@@ -8,6 +8,9 @@ public abstract class Persona {
     protected String sexo;
     protected int edad;
 
+    public Persona(){
+    }
+
     public Persona(String nombres, String apellidos, String telefono, String dni, String sexo, int edad) {
         this.nombres = nombres;
         this.apellidos = apellidos;
@@ -16,7 +19,6 @@ public abstract class Persona {
         this.sexo = sexo;
         this.edad = edad;
     }
-
     
     //getters y setters
     public String getNombres() {
