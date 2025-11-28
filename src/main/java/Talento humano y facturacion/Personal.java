@@ -33,7 +33,6 @@ public class Personal {
         agregarAlLegajo(idEmpleado, "ALTA: Empleado dado de alta");
     }
 
-    // ✅ Mantener método viejo para compatibilidad (OPCIONAL)
     public void altaEmpleadoBasico(String idEmpleado, String nombre, String apellido, 
                                  String puesto, Date fechaIngreso, double salarioBase) {
         // Usar valores por defecto para los campos de Persona
