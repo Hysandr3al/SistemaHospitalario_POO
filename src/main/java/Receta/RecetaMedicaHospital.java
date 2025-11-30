@@ -12,6 +12,8 @@ public class RecetaMedicaHospital extends RecetaMedica {
     private Paciente paciente;
     private int idRecetaHospital;
 
+    public RecetaMedicaHospital(){
+    }
     public RecetaMedicaHospital(List<DetalleMedicamento> detalleMedicamentos, int idReceta, Doctor doctor, Paciente paciente) {
         super(detalleMedicamentos);
         this.idReceta = idReceta;

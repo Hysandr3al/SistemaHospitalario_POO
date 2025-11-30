@@ -5,6 +5,8 @@ import java.util.List;
 public abstract class RecetaMedica {
     protected List<DetalleMedicamento> detalleMedicamentos;
 
+    public RecetaMedica(){
+    }
     public RecetaMedica(List<DetalleMedicamento> detalleMedicamentos) {
         this.detalleMedicamentos = detalleMedicamentos;
     }
