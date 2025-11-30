@@ -4,6 +4,7 @@ public class Doctor extends Persona{
     private String especialidad;
     private String horario;
     private double salario;
+    private int idDoctor;
 
     public Doctor(){  
     }
@@ -22,6 +23,30 @@ public class Doctor extends Persona{
 
     public String getEspecialidad(){
         return especialidad;
+    }
+    public void setEspecialidad(String especialidad){
+        this.especialidad = especialidad;
+    }
+    
+    public int getIdDoctor(){
+        return idDoctor;
+    }
+    public void setIdDoctor(int idDoctor){
+        this.idDoctor = idDoctor;
+    }
+    
+    public String getHorario(){
+        return horario;
+    }
+    public void setHorario(String horario){
+        this.horario = horario;
+    }
+
+    public double getSalario(){
+        return salario;
+    }
+    public void setSalario(double salario){
+        this.salario = salario;
     }
 
     @Override
