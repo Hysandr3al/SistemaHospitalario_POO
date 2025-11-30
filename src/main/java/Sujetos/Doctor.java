@@ -5,7 +5,8 @@ public class Doctor extends Persona{
     private String horario;
     private double salario;
 
-
+    public Doctor(){  
+    }
 
     public Doctor(String nombres, String apellidos, String telefono, String dni, String sexo, int edad,
                   String especialidad, String horario, double salario) {
