@@ -8,6 +8,11 @@ public class Medicamento implements Vendible {
     private int stock;
     private String fechaVencimiento;
     private double descuento;
+    private int idMedicamento;
+
+    public Medicamento(){
+
+    }
 
     public Medicamento(int codigo, String nombre, String tipo, double precio, int stock, String fechaVencimiento, double descuento) {
         this.codigo = codigo;
@@ -22,7 +27,6 @@ public class Medicamento implements Vendible {
     public int getCodigo() {
         return codigo;
     }
-
     public void setCodigo(int codigo) {
         this.codigo = codigo;
     }
@@ -30,7 +34,6 @@ public class Medicamento implements Vendible {
     public String getNombre() {
         return nombre;
     }
-
     public void setNombre(String nombre) {
         this.nombre = nombre;
     }
@@ -38,7 +41,6 @@ public class Medicamento implements Vendible {
     public String getTipo() {
         return tipo;
     }
-
     public void setTipo(String tipo) {
         this.tipo = tipo;
     }
@@ -46,7 +48,6 @@ public class Medicamento implements Vendible {
     public double getPrecio() {
         return precio;
     }
-
     public void setPrecio(double precio) {
         this.precio = precio;
     }
@@ -54,7 +55,6 @@ public class Medicamento implements Vendible {
     public int getStock() {
         return stock;
     }
-
     public void setStock(int stock) {
         this.stock = stock;
     }
@@ -62,7 +62,6 @@ public class Medicamento implements Vendible {
     public String getFechaVencimiento() {
         return fechaVencimiento;
     }
-
     public void setFechaVencimiento(String fechaVencimiento) {
         this.fechaVencimiento = fechaVencimiento;
     }
@@ -70,9 +69,15 @@ public class Medicamento implements Vendible {
     public double getDescuento() {
         return descuento;
     }
-
     public void setDescuento(double descuento) {
         this.descuento = descuento;
+    }
+
+    public int getIdMedicamento(){
+        return idMedicamento;
+    }
+    public void setIdMedicamento(int idMedicamento){
+        this.idMedicamento = idMedicamento;
     }
 
     @Override
