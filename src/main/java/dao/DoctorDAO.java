@@ -19,18 +19,19 @@ public class DoctorDAO implements InterfazCRUD<Doctor>{
         d.setSexo(rs.getString("sexo"));
         d.setEdad(rs.getInt("edad"));
         d.setHorario(rs.getString("horario"));
+        d.setSalario(rs.getDouble("salario"));
         
         return d;
     }
 
     @Override
     public boolean registrar(Doctor d){
-        String sql = "INSERT INTO Paciente(idDoctor, especialidad, horario, nombres, apellidos, dni, telefono, sexo, edad)" + 
+        String sql = "INSERT INTO Doctor(salario, especialidad, horario, nombres, apellidos, dni, telefono, sexo, edad)" + 
                         "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
         
         try(Connection con = ConexionDB.getConnection();
             PreparedStatement ps = con.prepareStatement(sql)){
-            ps.setInt(1, d.getIdDoctor());
+            ps.setDouble(1, d.getSalario());
             ps.setString(2, d.getEspecialidad());
             ps.setString(3, d.getHorario());
             ps.setString(4, d.getNombres());
@@ -49,7 +50,7 @@ public class DoctorDAO implements InterfazCRUD<Doctor>{
 
     @Override
     public boolean modificar(Doctor d){
-        String sql = "UPDATE Paciente SET especialidad=?, horario=?, nombres=?, apellidos=?, dni=?, telefono=?, sexo=?, edad=?" + "WHERE idDoctor=?";
+        String sql = "UPDATE Doctor SET especialidad=?, horario=?, nombres=?, apellidos=?, dni=?, telefono=?, sexo=?, edad=?, salario=?" + "WHERE idDoctor=?";
         try(Connection con = ConexionDB.getConnection();
             PreparedStatement ps = con.prepareStatement(sql)){
             ps.setString(1, d.getEspecialidad());
@@ -60,7 +61,8 @@ public class DoctorDAO implements InterfazCRUD<Doctor>{
             ps.setString(6, d.getTelefono());
             ps.setString(7, d.getSexo());
             ps.setInt(8, d.getEdad());
-            ps.setInt(9, d.getIdDoctor());
+            ps.setDouble(9, d.getSalario());
+            ps.setInt(10, d.getIdDoctor());
 
             return ps.executeUpdate() > 0;
         } catch (SQLException e){
@@ -85,7 +87,7 @@ public class DoctorDAO implements InterfazCRUD<Doctor>{
 
     @Override
     public Doctor buscarPorId(int id){
-        String sql = "SELECT * FROM Paciente WHERE idDoctor=?";
+        String sql = "SELECT * FROM Doctor WHERE idDoctor=?";
         Doctor d = null;
         try(Connection con = ConexionDB.getConnection();
             PreparedStatement ps = con.prepareStatement(sql)){
