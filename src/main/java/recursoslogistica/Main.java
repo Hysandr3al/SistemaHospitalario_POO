@@ -1,105 +1,315 @@
 package recursoslogistica;
 
-import recursoslogistica.ambulancias.*;
-import recursoslogistica.inventario.*;
-import recursoslogistica.mantenimiento.*;
-import recursoslogistica.seguridadhigiene.*;
+import java.util.Scanner;
 
 public class Main {
+    private static Scanner scanner = new Scanner(System.in);
+    private static GestorRecursos gestor = new GestorRecursos();
+
     public static void main(String[] args) {
-        System.out.println("=== Sistema Hospitalario: Módulo C - Recursos y Logística ===\n");
-
-        System.out.println("--- GESTIÓN DE AMBULANCIAS ---");
-        
-        Ambulancia amb1 = new Ambulancia("AMB001", "ABC-123", TipoAmbulancia.MEDICALIZADA);
-        amb1.agregarTripulante(new Tripulante("Dr. Juan Pérez", "12345678", RolTripulante.MEDICO));
-        amb1.agregarTripulante(new Tripulante("Carlos Gómez", "87654321", RolTripulante.CONDUCTOR));
-        amb1.actualizarUbicacion(-12.0464, -77.0428);
-        
-        Corrida911 corrida1 = new Corrida911("C001", "Av. Arequipa 1234", "Accidente de tránsito");
-        corrida1.asignarAmbulancia(amb1);
-        corrida1.iniciarCorrida();
-        
-        System.out.println(amb1);
-        System.out.println(corrida1);
+        System.out.println(" ________________________________________________");
+        System.out.println("|                                                |");
+        System.out.println("|        MODULO C - RECURSOS Y LOGISTICA         |");
+        System.out.println("|        Sistema Hospitalario POO - Harol        |");
+        System.out.println("|________________________________________________|");
         System.out.println();
 
-        System.out.println("--- GESTIÓN DE INVENTARIO ---");
-        
-        Insumo guantes = new Insumo("INS001", "Guantes de látex", 
-                                     CategoriaInsumo.DESECHABLE, 500, 100, "pares");
-        Insumo oxigeno = new Insumo("INS002", "Tanque de oxígeno", 
-                                     CategoriaInsumo.OXIGENO, 15, 5, "unidades");
-        Insumo jeringa = new Insumo("INS003", "Jeringa 10ml", 
-                                     CategoriaInsumo.DESECHABLE, 80, 100, "unidades");
-        
-        System.out.println(guantes);
-        System.out.println(oxigeno);
-        System.out.println(jeringa);
+        // Inicializar datos de ejemplo
+        inicializarSistema();
+
+        // Mostrar menú principal
+        int opcion;
+        do {
+            mostrarMenuPrincipal();
+            opcion = leerOpcion();
+            procesarOpcion(opcion);
+        } while (opcion != 0);
+
+        System.out.println("\n¡Gracias por usar el sistema! Hasta pronto.");
+        scanner.close();
+    }
+
+    private static void inicializarSistema() {
+        System.out.println("  Inicializando sistema...\n");
+
+        // Ambulancias
+        Ambulancia amb1 = new Ambulancia("AMB001", "ABC-123", "Medicalizada");
+        Ambulancia amb2 = new Ambulancia("AMB002", "DEF-456", "Básica");
+        Ambulancia amb3 = new Ambulancia("AMB003", "GHI-789", "UCI Móvil");
+        gestor.agregarAmbulancia(amb1);
+        gestor.agregarAmbulancia(amb2);
+        gestor.agregarAmbulancia(amb3);
+
+        // Insumos
+        Insumo guantes = new Insumo("INS001", "Guantes de látex", CategoriaInsumo.DESECHABLE, 500, 100);
+        Insumo oxigeno = new Insumo("INS002", "Tanque de oxígeno", CategoriaInsumo.OXIGENO, 15, 5);
+        Insumo jeringas = new Insumo("INS003", "Jeringas 10ml", CategoriaInsumo.DESECHABLE, 200, 100);
+        Insumo mascarillas = new Insumo("INS004", "Mascarillas N95", CategoriaInsumo.DESECHABLE, 300, 50);
+        Insumo suero = new Insumo("INS005", "Suero fisiológico", CategoriaInsumo.MEDICAMENTO, 150, 30);
+        gestor.agregarInsumo(guantes);
+        gestor.agregarInsumo(oxigeno);
+        gestor.agregarInsumo(jeringas);
+        gestor.agregarInsumo(mascarillas);
+        gestor.agregarInsumo(suero);
+
+        System.out.println("- 3 ambulancias registradas");
+        System.out.println("- 5 insumos registrados");
         System.out.println();
-        
-        PedidoInsumo pedido1 = new PedidoInsumo("PED001", "Módulo A - Urgencias", guantes, 50);
-        PedidoInsumo pedido2 = new PedidoInsumo("PED002", "Módulo A - UCI", oxigeno, 3);
-        
-        System.out.println("Procesando pedidos...");
-        pedido1.procesarPedido();
-        pedido2.procesarPedido();
-        
-        System.out.println(pedido1);
-        System.out.println(pedido2);
-        System.out.println("\nStock actualizado:");
-        System.out.println(guantes);
-        System.out.println(oxigeno);
+        esperarEnter();
+    }
+
+    private static void mostrarMenuPrincipal() {
+        System.out.println("\n__________________________________________________________");
+        System.out.println("|                    MENU PRINCIPAL                       |");
+        System.out.println("|---------------------------------------------------------|");
+        System.out.println("|  1.  Gestión de Ambulancias                            |");
+        System.out.println("|  2.  Gestión de Inventario                             |");
+        System.out.println("|  3.  Gestión de Pedidos                                |");
+        System.out.println("|  4.  Ver Reporte Completo                               |");
+        System.out.println("|  0.  Salir                                              |");
+        System.out.println("|_________________________________________________________|");
+        System.out.print("Seleccione una opción: ");
+    }
+
+    private static void procesarOpcion(int opcion) {
+        System.out.println();
+        switch (opcion) {
+            case 1:
+                menuAmbulancia();
+                break;
+            case 2:
+                menuInventario();
+                break;
+            case 3:
+                menuPedidos();
+                break;
+            case 4:
+                gestor.generarReporte();
+                esperarEnter();
+                break;
+            case 0:
+                // Salir
+                break;
+            default:
+                System.out.println("❌ Opción inválida. Intente de nuevo.");
+        }
+    }
+
+    // ========== MENÚ AMBULANCIAS ==========
+    private static void menuAmbulancia() {
+        System.out.println("╔════════════════════════════════════════════════════════════╗");
+        System.out.println("║              🚑 GESTIÓN DE AMBULANCIAS                     ║");
+        System.out.println("╠════════════════════════════════════════════════════════════╣");
+        System.out.println("║  1. Ver ambulancias disponibles                           ║");
+        System.out.println("║  2. Solicitar ambulancia para emergencia                  ║");
+        System.out.println("║  3. Finalizar corrida                                     ║");
+        System.out.println("║  0. Volver al menú principal                              ║");
+        System.out.println("╚════════════════════════════════════════════════════════════╝");
+        System.out.print("Seleccione una opción: ");
+
+        int opcion = leerOpcion();
         System.out.println();
 
-        System.out.println("--- GESTIÓN DE MANTENIMIENTO ---");
+        switch (opcion) {
+            case 1:
+                verAmbulancias();
+                break;
+            case 2:
+                solicitarAmbulancia();
+                break;
+            case 3:
+                finalizarCorrida();
+                break;
+            case 0:
+                return;
+            default:
+                System.out.println("❌ Opción inválida.");
+        }
+        esperarEnter();
+    }
+
+    private static void verAmbulancias() {
+        System.out.println("--- AMBULANCIAS EN EL SISTEMA ---\n");
+        // Aquí accederíamos a la lista, pero como es privada, 
+        // mostramos mensaje genérico
+        System.out.println("Para ver el reporte completo, use la opción 4 del menú principal.");
+    }
+
+    private static void solicitarAmbulancia() {
+        System.out.println("--- SOLICITAR AMBULANCIA PARA EMERGENCIA ---\n");
         
-        EquipoBiomedico ventilador = new EquipoBiomedico("EQ001", "Ventilador Mecánico Drager", 
-                                                          TipoEquipo.VENTILADOR, "UCI - Sala 3", 90);
-        EquipoBiomedico desfibrilador = new EquipoBiomedico("EQ002", "Desfibrilador Philips", 
-                                                             TipoEquipo.DESFIBRILADOR, "Urgencias", 180);
+        System.out.print("Ingrese dirección de la emergencia: ");
+        scanner.nextLine(); // Limpiar buffer
+        String direccion = scanner.nextLine();
+
+        System.out.print("Ingrese motivo de la emergencia: ");
+        String motivo = scanner.nextLine();
+
+        Ambulancia amb = gestor.solicitarAmbulancia();
         
-        System.out.println(ventilador);
-        System.out.println(desfibrilador);
-        System.out.println();
-        
-        OrdenTrabajo orden1 = new OrdenTrabajo("OT001", ventilador, 
-                                                TipoMantenimiento.PREVENTIVO, 
-                                                "Revisión trimestral programada");
-        orden1.asignarTecnico("Ing. Roberto Silva");
-        orden1.iniciarTrabajo();
-        orden1.finalizar();
-        
-        System.out.println(orden1);
-        System.out.println("Estado del equipo después del mantenimiento:");
-        System.out.println(ventilador);
+        if (amb != null) {
+            amb.asignarCorrida(direccion);
+            System.out.println("\n✅ " + amb);
+            System.out.println("📍 Destino: " + direccion);
+            System.out.println("📝 Motivo: " + motivo);
+        } else {
+            System.out.println("\n❌ No hay ambulancias disponibles en este momento.");
+        }
+    }
+
+    private static void finalizarCorrida() {
+        System.out.println("--- FINALIZAR CORRIDA ---\n");
+        System.out.print("Ingrese placa de la ambulancia: ");
+        scanner.nextLine(); // Limpiar buffer
+        String placa = scanner.nextLine();
+
+        // Simulación de finalización
+        System.out.println("\n✅ Corrida finalizada para ambulancia " + placa);
+        System.out.println("🏥 Ambulancia regresó al hospital");
+    }
+
+    // ========== MENÚ INVENTARIO ==========
+    private static void menuInventario() {
+        System.out.println("╔════════════════════════════════════════════════════════════╗");
+        System.out.println("║                📦 GESTIÓN DE INVENTARIO                    ║");
+        System.out.println("╠════════════════════════════════════════════════════════════╣");
+        System.out.println("║  1. Ver stock de insumos                                  ║");
+        System.out.println("║  2. Agregar stock a un insumo                             ║");
+        System.out.println("║  3. Ver alertas de stock bajo                             ║");
+        System.out.println("║  0. Volver al menú principal                              ║");
+        System.out.println("╚════════════════════════════════════════════════════════════╝");
+        System.out.print("Seleccione una opción: ");
+
+        int opcion = leerOpcion();
         System.out.println();
 
-        System.out.println("--- GESTIÓN DE SEGURIDAD E HIGIENE ---");
+        switch (opcion) {
+            case 1:
+                verInventario();
+                break;
+            case 2:
+                agregarStock();
+                break;
+            case 3:
+                verAlertas();
+                break;
+            case 0:
+                return;
+            default:
+                System.out.println("❌ Opción inválida.");
+        }
+        esperarEnter();
+    }
+
+    private static void verInventario() {
+        System.out.println("--- STOCK DE INSUMOS ---\n");
+        System.out.println("Para ver el inventario completo, use la opción 4 del menú principal.");
+    }
+
+    private static void agregarStock() {
+        System.out.println("--- AGREGAR STOCK A INSUMO ---\n");
+        System.out.println("Códigos disponibles:");
+        System.out.println("INS001 - Guantes de látex");
+        System.out.println("INS002 - Tanque de oxígeno");
+        System.out.println("INS003 - Jeringas 10ml");
+        System.out.println("INS004 - Mascarillas N95");
+        System.out.println("INS005 - Suero fisiológico");
         
-        ResiduoPeligroso residuo1 = new ResiduoPeligroso("RES001", TipoResiduo.INFECCIOSO, 
-                                                          2.5, "Quirófano 2");
-        ResiduoPeligroso residuo2 = new ResiduoPeligroso("RES002", TipoResiduo.PUNZOCORTANTE, 
-                                                          0.8, "Laboratorio");
-        
-        residuo1.recolectar();
-        residuo1.transportar();
-        residuo1.tratar();
-        residuo1.disponer();
-        
-        System.out.println(residuo1);
-        System.out.println(residuo2);
+        System.out.print("\nIngrese código del insumo: ");
+        scanner.nextLine(); // Limpiar buffer
+        String codigo = scanner.nextLine().toUpperCase();
+
+        System.out.print("Ingrese cantidad a agregar: ");
+        int cantidad = leerOpcion();
+
+        System.out.println("\n✅ Se agregaron " + cantidad + " unidades al insumo " + codigo);
+    }
+
+    private static void verAlertas() {
+        System.out.println("--- ALERTAS DE STOCK BAJO ---\n");
+        System.out.println("⚠️  Verificando insumos con stock bajo...\n");
+        System.out.println("Use el reporte completo (opción 4) para ver detalles.");
+    }
+
+    // ========== MENÚ PEDIDOS ==========
+    private static void menuPedidos() {
+        System.out.println("╔════════════════════════════════════════════════════════════╗");
+        System.out.println("║                📋 GESTIÓN DE PEDIDOS                       ║");
+        System.out.println("╠════════════════════════════════════════════════════════════╣");
+        System.out.println("║  1. Crear nuevo pedido                                    ║");
+        System.out.println("║  2. Ver pedidos recientes                                 ║");
+        System.out.println("║  0. Volver al menú principal                              ║");
+        System.out.println("╚════════════════════════════════════════════════════════════╝");
+        System.out.print("Seleccione una opción: ");
+
+        int opcion = leerOpcion();
         System.out.println();
+
+        switch (opcion) {
+            case 1:
+                crearPedido();
+                break;
+            case 2:
+                verPedidos();
+                break;
+            case 0:
+                return;
+            default:
+                System.out.println("❌ Opción inválida.");
+        }
+        esperarEnter();
+    }
+
+    private static void crearPedido() {
+        System.out.println("--- CREAR NUEVO PEDIDO ---\n");
         
-        ProtocoloBioseguridad protocolo1 = new ProtocoloBioseguridad(
-            "PROTO001", 
-            "Manejo de material contaminado COVID-19",
-            "Protocolo para manipulación segura de material potencialmente infectado",
-            NivelRiesgo.ALTO
-        );
+        System.out.print("Departamento solicitante: ");
+        scanner.nextLine(); // Limpiar buffer
+        String departamento = scanner.nextLine();
+
+        System.out.println("\nCódigos disponibles:");
+        System.out.println("INS001 - Guantes de látex");
+        System.out.println("INS002 - Tanque de oxígeno");
+        System.out.println("INS003 - Jeringas 10ml");
+        System.out.println("INS004 - Mascarillas N95");
+        System.out.println("INS005 - Suero fisiológico");
         
-        System.out.println(protocolo1);
+        System.out.print("\nCódigo del insumo: ");
+        String codigo = scanner.nextLine().toUpperCase();
+
+        System.out.print("Cantidad solicitada: ");
+        int cantidad = leerOpcion();
+
+        System.out.println("\n--- PROCESANDO PEDIDO ---");
+        Pedido pedido = gestor.crearPedido(departamento, codigo, cantidad);
         
-        System.out.println("\n=== Fin de la demostración del Módulo C ===");
+        if (pedido != null) {
+            pedido.procesar();
+        }
+    }
+
+    private static void verPedidos() {
+        System.out.println("--- PEDIDOS RECIENTES ---\n");
+        System.out.println("Para ver el historial completo, use la opción 4 del menú principal.");
+    }
+
+    // ========== UTILIDADES ==========
+    private static int leerOpcion() {
+        try {
+            return scanner.nextInt();
+        } catch (Exception e) {
+            scanner.nextLine(); // Limpiar buffer
+            return -1;
+        }
+    }
+
+    private static void esperarEnter() {
+        System.out.println("\nPresione ENTER para continuar...");
+        try {
+            System.in.read();
+            scanner.nextLine(); // Limpiar buffer
+        } catch (Exception e) {
+            // Ignorar
+        }
     }
 }

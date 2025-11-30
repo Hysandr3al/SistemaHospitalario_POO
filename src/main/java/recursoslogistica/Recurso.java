@@ -1,11 +1,10 @@
 package recursoslogistica;
 
+
+//Clase abstracta base
+
 import java.time.LocalDate;
 
-/**
- * Clase abstracta base para todos los recursos del hospital
- * (Ambulancias, Insumos, Equipos, etc.)
- */
 public abstract class Recurso {
     protected String codigo;
     protected String nombre;
@@ -33,10 +32,6 @@ public abstract class Recurso {
 
     public void setEstado(EstadoRecurso estado) {
         this.estado = estado;
-    }
-
-    public LocalDate getFechaRegistro() {
-        return fechaRegistro;
     }
 
     @Override

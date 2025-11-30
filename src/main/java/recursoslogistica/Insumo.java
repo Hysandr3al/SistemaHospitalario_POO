@@ -1,26 +1,15 @@
-package recursoslogistica.inventario;
-
-import recursoslogistica.Recurso;
-import recursoslogistica.EstadoRecurso;
+package recursoslogistica;
 
 public class Insumo extends Recurso {
     private CategoriaInsumo categoria;
     private int cantidad;
     private int stockMinimo;
-    private String unidadMedida;
 
-    public Insumo(String codigo, String nombre, CategoriaInsumo categoria, 
-                  int cantidad, int stockMinimo, String unidadMedida) {
+    public Insumo(String codigo, String nombre, CategoriaInsumo categoria, int cantidad, int stockMinimo) {
         super(codigo, nombre);
         this.categoria = categoria;
         this.cantidad = cantidad;
         this.stockMinimo = stockMinimo;
-        this.unidadMedida = unidadMedida;
-        actualizarEstado();
-    }
-
-    public void agregar(int cantidadAgregar) {
-        this.cantidad += cantidadAgregar;
         actualizarEstado();
     }
 
@@ -33,11 +22,14 @@ public class Insumo extends Recurso {
         return false;
     }
 
+    public void agregar(int cantidadAgregar) {
+        this.cantidad += cantidadAgregar;
+        actualizarEstado();
+    }
+
     private void actualizarEstado() {
         if (cantidad == 0) {
             this.estado = EstadoRecurso.AGOTADO;
-        } else if (cantidad <= stockMinimo) {
-            this.estado = EstadoRecurso.EN_MANTENIMIENTO;
         } else {
             this.estado = EstadoRecurso.DISPONIBLE;
         }
@@ -58,7 +50,6 @@ public class Insumo extends Recurso {
     @Override
     public String toString() {
         String alerta = necesitaReposicion() ? " ⚠️ STOCK BAJO" : "";
-        return "Insumo: " + nombre + " (" + categoria + ") - Stock: " 
-                + cantidad + " " + unidadMedida + alerta;
+        return "Insumo: " + nombre + " (" + categoria + ") - Stock: " + cantidad + " unidades" + alerta;
     }
 }
