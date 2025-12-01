@@ -12,6 +12,7 @@ public class PacienteDAO implements InterfazCRUD<Paciente>{
         Paciente p = new Paciente();
         p.setIdPaciente(rs.getInt("idPaciente"));
         p.setNombres(rs.getString("nombres"));
+        p.setApellidos("apellidos");
         p.setDni(rs.getString("dni"));
         p.setTelefono(rs.getString("telefono"));
         p.setDireccion(rs.getString("direccion"));
@@ -25,21 +26,20 @@ public class PacienteDAO implements InterfazCRUD<Paciente>{
 
     @Override
     public boolean registrar(Paciente p){
-        String sql = "INSERT INTO Paciente(gruposanguineo, alergias, idPaciente, nombres, apellidos, dni, telefono, direccion, sexo, edad)" + 
-                        "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO Paciente(gruposanguineo, alergias, nombres, apellidos, dni, telefono, direccion, sexo, edad)" + 
+                        "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
         
         try(Connection con = ConexionDB.getConnection();
             PreparedStatement ps = con.prepareStatement(sql)){
             ps.setString(1, p.getGrupoSanguineo());
             ps.setString(2, p.getAlergias());
-            ps.setInt(3, p.getIdPaciente());
-            ps.setString(4, p.getNombres());
-            ps.setString(5, p.getApellidos());
-            ps.setString(6, p.getDni());
-            ps.setString(7, p.getTelefono());
-            ps.setString(8, p.getDireccion());
-            ps.setString(9, p.getSexo());
-            ps.setInt(10, p.getEdad());
+            ps.setString(3, p.getNombres());
+            ps.setString(4, p.getApellidos());
+            ps.setString(5, p.getDni());
+            ps.setString(6, p.getTelefono());
+            ps.setString(7, p.getDireccion());
+            ps.setString(8, p.getSexo());
+            ps.setInt(9, p.getEdad());
 
             return ps.executeUpdate() > 0;
         } catch (SQLException e){
