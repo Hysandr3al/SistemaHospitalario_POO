@@ -22,11 +22,11 @@ public class Pedido {
     public boolean procesar() {
         if (insumo.retirar(cantidadSolicitada)) {
             this.aprobado = true;
-            System.out.println("✅ Pedido aprobado: " + this);
+            System.out.println("Pedido aprobado: " + this);
             return true;
         } else {
             this.aprobado = false;
-            System.out.println("❌ Pedido rechazado - Stock insuficiente: " + this);
+            System.out.println("Pedido rechazado - Stock insuficiente: " + this);
             return false;
         }
     }

@@ -35,7 +35,7 @@ public class GestorRecursos {
     public Pedido crearPedido(String departamento, String codigoInsumo, int cantidad) {
         Insumo insumo = buscarInsumo(codigoInsumo);
         if (insumo == null) {
-            System.out.println("❌ Insumo no encontrado: " + codigoInsumo);
+            System.out.println(" Insumo no encontrado: " + codigoInsumo);
             return null;
         }
 
@@ -55,23 +55,23 @@ public class GestorRecursos {
     }
 
     public void generarReporte() {
-        System.out.println("\n📊 REPORTE DEL MÓDULO C - RECURSOS Y LOGÍSTICA");
+        System.out.println("\n REPORTE DEL MODULO C - RECURSOS Y LOGISTICA");
         System.out.println("=".repeat(60));
 
-        System.out.println("\n🚑 FLOTA DE AMBULANCIAS:");
+        System.out.println("\n FLOTA DE AMBULANCIAS:");
         for (Ambulancia amb : flota) {
             System.out.println("  " + amb);
         }
 
-        System.out.println("\n📦 INVENTARIO:");
+        System.out.println("\n INVENTARIO:");
         for (Insumo insumo : inventario) {
             System.out.println("  " + insumo);
         }
 
-        System.out.println("\n📋 PEDIDOS RECIENTES:");
+        System.out.println("\n PEDIDOS RECIENTES:");
         int max = Math.min(5, pedidos.size());
         for (int i = Math.max(0, pedidos.size() - max); i < pedidos.size(); i++) {
-            System.out.println("  " + pedidos.get(i) + " - " + (pedidos.get(i).isAprobado() ? "✅ APROBADO" : "❌ RECHAZADO"));
+            System.out.println("  " + pedidos.get(i) + " - " + (pedidos.get(i).isAprobado() ? " APROBADO" : " RECHAZADO"));
         }
 
         System.out.println("=".repeat(60));

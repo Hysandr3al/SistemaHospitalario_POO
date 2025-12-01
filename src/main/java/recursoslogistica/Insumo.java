@@ -49,7 +49,7 @@ public class Insumo extends Recurso {
 
     @Override
     public String toString() {
-        String alerta = necesitaReposicion() ? " ⚠️ STOCK BAJO" : "";
+        String alerta = necesitaReposicion() ? " STOCK BAJO" : "";
         return "Insumo: " + nombre + " (" + categoria + ") - Stock: " + cantidad + " unidades" + alerta;
     }
 }

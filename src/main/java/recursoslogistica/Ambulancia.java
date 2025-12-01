@@ -1,6 +1,11 @@
 package recursoslogistica;
 
+
+// HERENCIA: Ambulancia hereda de Recurso
 public class Ambulancia extends Recurso {
+    
+    // ATRIBUTOS PROPIOS (solo de ambulancia, no de otros recursos)
+    
     private String placa;
     private String tipoAmbulancia;
     private String ubicacionActual;
@@ -21,7 +26,7 @@ public class Ambulancia extends Recurso {
     public void finalizarCorrida() {
         this.estado = EstadoRecurso.DISPONIBLE;
         this.ubicacionActual = "Hospital";
-        System.out.println("Ambulancia " + placa + " regresó al hospital");
+        System.out.println("Ambulancia " + placa + " regreso al hospital");
     }
 
     public String getPlaca() {
@@ -30,6 +35,6 @@ public class Ambulancia extends Recurso {
 
     @Override
     public String toString() {
-        return "Ambulancia " + placa + " (" + tipoAmbulancia + ") - Estado: " + estado + " - Ubicación: " + ubicacionActual;
+        return "Ambulancia " + placa + " (" + tipoAmbulancia + ") - Estado: " + estado + " - Ubicacion: " + ubicacionActual;
     }
 }
