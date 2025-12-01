@@ -1,168 +1,168 @@
-package Sujetos;
+package hospital.pacienteepisodio;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
 import java.util.Scanner;
 
-public class Menu {
+public class MenuEpisodio {
 
-    private static final Scanner sc = new Scanner(System.in);
-    private static Paciente paciente;
+    private static Scanner sc = new Scanner(System.in);
 
-    // Mapa para opciones del menú principal
-    private static final Map<Integer, Runnable> acciones = new HashMap<>();
+    // Episodios almacenados temporalmente (sin BD todavía)
+    private static ArrayList<Episodio> episodios = new ArrayList<>();
+
+    // DAOs independientes
+    private static CitaAmbulatoriaDAO citaDAO = new CitaAmbulatoriaDAO();
+    private static HospitalizacionDAO hospDAO = new HospitalizacionDAO();
+    private static CirugiaDAO cirDAO = new CirugiaDAO();
+    private static UrgenciaDAO urgDAO = new UrgenciaDAO();
 
     public static void main(String[] args) {
-
-        cargarAcciones();
 
         int opcion;
 
         do {
-            mostrarMenu();
+            System.out.println("\n=== CRUD DE EPISODIOS (SIN EpisodioListDAO) ===");
+            System.out.println("1. Registrar episodio");
+            System.out.println("2. Listar episodios");
+            System.out.println("3. Editar descripción de un episodio");
+            System.out.println("4. Eliminar episodio");
+            System.out.println("0. Salir");
+            System.out.print("Seleccione una opción: ");
 
-            opcion = leerEntero("Seleccione una opción: ");
+            opcion = sc.nextInt();
+            sc.nextLine();
 
-            acciones.getOrDefault(opcion, () -> System.out.println("Opción no válida"))
-                    .run();
+            switch (opcion) {
+                case 1 -> registrarEpisodio();
+                case 2 -> listarEpisodios();
+                case 3 -> editarEpisodio();
+                case 4 -> eliminarEpisodio();
+                case 0 -> System.out.println("Saliendo...");
+                default -> System.out.println("Opción no válida.");
+            }
 
         } while (opcion != 0);
     }
 
-    // ================================
-    // CONFIGURACIÓN DE ACCIONES
-    // ================================
-    private static void cargarAcciones() {
-        acciones.put(1, Menu::registrarPaciente);
-        acciones.put(2, Menu::mostrarPaciente);
-        acciones.put(3, Menu::agregarEpisodio);
-        acciones.put(4, Menu::mostrarHistoriaClinica);
-        acciones.put(0, () -> System.out.println("Saliendo del sistema..."));
-    }
+    // ---------------------------------------------------------
+    // REGISTRAR
+    // ---------------------------------------------------------
+    private static void registrarEpisodio() {
 
-    // ================================
-    // MOSTRAR MENÚ
-    // ================================
-    private static void mostrarMenu() {
-        System.out.println("\n=== SISTEMA HOSPITALARIO – MÓDULO PACIENTE Y EPISODIO ===");
-        System.out.println("1. Registrar paciente");
-        System.out.println("2. Ver información del paciente");
-        System.out.println("3. Agregar episodio");
-        System.out.println("4. Ver historia clínica");
-        System.out.println("0. Salir");
-    }
-
-    // ================================
-    // REGISTRAR PACIENTE
-    // ================================
-    private static void registrarPaciente() {
-        System.out.println("\n--- Registro de Paciente ---");
-
-        String nombres   = leerTexto("Nombres: ");
-        String apellidos = leerTexto("Apellidos: ");
-        String telefono  = leerTexto("Teléfono: ");
-        String dni       = leerTexto("DNI: ");
-        String sexo      = leerTexto("Sexo: ");
-        int edad         = leerEntero("Edad: ");
-        String gs        = leerTexto("Grupo sanguíneo: ");
-        String alergias  = leerTexto("Alergias: ");
-
-        paciente = new Paciente(nombres, apellidos, telefono, dni, sexo, edad, gs, alergias);
-
-        System.out.println("Paciente registrado exitosamente.");
-    }
-
-    // ================================
-    // MOSTRAR PACIENTE
-    // ================================
-    private static void mostrarPaciente() {
-        if (paciente == null) {
-            System.out.println("No hay paciente registrado.");
-            return;
-        }
-
-        paciente.mostrarInfo();
-    }
-
-    // ================================
-    // AGREGAR EPISODIO
-    // ================================
-    private static void agregarEpisodio() {
-
-        if (paciente == null) {
-            System.out.println("Primero debe registrar un paciente.");
-            return;
-        }
-
-        System.out.println("\n--- Agregar Episodio ---");
+        System.out.println("\n--- Elegir tipo de episodio ---");
         System.out.println("1. Cita Ambulatoria");
         System.out.println("2. Hospitalización");
         System.out.println("3. Cirugía");
         System.out.println("4. Urgencia");
+        System.out.print("Tipo: ");
 
-        int tipo = leerEntero("Seleccione: ");
+        int tipo = sc.nextInt();
+        sc.nextLine();
 
-        String desc = leerTexto("Descripción del episodio: ");
+        System.out.print("Descripción: ");
+        String desc = sc.nextLine();
+
+        Episodio epi = null;
 
         switch (tipo) {
-            case 1 ->
-                paciente.getHistoriaClinica().agregarEpisodio(new CitaAmbulatoria(desc));
-
+            case 1 -> {
+                epi = new CitaAmbulatoria(desc);
+                citaDAO.registrar((CitaAmbulatoria) epi);
+            }
             case 2 -> {
-                int cama = leerEntero("Número de cama: ");
-                paciente.getHistoriaClinica().agregarEpisodio(new Hospitalizacion(desc, cama));
+                System.out.print("Número de cama: ");
+                int cama = sc.nextInt();
+                sc.nextLine();
+                epi = new Hospitalizacion(desc, cama);
+                hospDAO.registrar((Hospitalizacion) epi);
             }
-
             case 3 -> {
-                String tipoC = leerTexto("Tipo de cirugía: ");
-                paciente.getHistoriaClinica().agregarEpisodio(new Cirugia(desc, tipoC));
+                System.out.print("Tipo de cirugía: ");
+                String tipoC = sc.nextLine();
+                epi = new Cirugia(desc, tipoC);
+                cirDAO.registrar((Cirugia) epi);
             }
-
             case 4 -> {
-                String triage = leerTexto("Triage: ");
-                paciente.getHistoriaClinica().agregarEpisodio(new Urgencia(desc, triage));
+                System.out.print("Triage: ");
+                String tri = sc.nextLine();
+                epi = new Urgencia(desc, tri);
+                urgDAO.registrar((Urgencia) epi);
             }
-
             default -> {
                 System.out.println("Tipo no válido.");
                 return;
             }
         }
 
-        System.out.println("Episodio agregado correctamente.");
+        episodios.add(epi);
+
+        System.out.println("Episodio registrado.");
     }
 
-    // ================================
-    // MOSTRAR HISTORIA CLÍNICA
-    // ================================
-    private static void mostrarHistoriaClinica() {
-        if (paciente == null) {
-            System.out.println("No hay paciente registrado.");
+    // ---------------------------------------------------------
+    // LISTAR
+    // ---------------------------------------------------------
+    private static void listarEpisodios() {
+        System.out.println("\n--- LISTA DE EPISODIOS ---");
+
+        if (episodios.isEmpty()) {
+            System.out.println("No hay episodios registrados.");
             return;
         }
 
-        System.out.println("\n" + paciente.getHistoriaClinica());
-
-        paciente.getHistoriaClinica().getEpisodios()
-                .forEach(ep -> System.out.println(" - " + ep));
-    }
-
-    // ================================
-    // MÉTODOS UTILITARIOS
-    // ================================
-    private static String leerTexto(String mensaje) {
-        System.out.print(mensaje);
-        return sc.nextLine();
-    }
-
-    private static int leerEntero(String mensaje) {
-        System.out.print(mensaje);
-        while (!sc.hasNextInt()) {
-            System.out.print("Ingrese un número válido: ");
-            sc.next();
+        int i = 1;
+        for (Episodio e : episodios) {
+            System.out.println(i + ". " + e);
+            i++;
         }
-        int valor = sc.nextInt();
+    }
+
+    // ---------------------------------------------------------
+    // EDITAR
+    // ---------------------------------------------------------
+    private static void editarEpisodio() {
+        listarEpisodios();
+
+        if (episodios.isEmpty()) return;
+
+        System.out.print("\nSeleccione número: ");
+        int pos = sc.nextInt();
         sc.nextLine();
-        return valor;
+
+        if (pos < 1 || pos > episodios.size()) {
+            System.out.println("Índice inválido.");
+            return;
+        }
+
+        Episodio e = episodios.get(pos - 1);
+
+        System.out.print("Nueva descripción: ");
+        String nueva = sc.nextLine();
+
+        e.descripcion = nueva;
+
+        System.out.println("Episodio actualizado.");
+    }
+
+    // ---------------------------------------------------------
+    // ELIMINAR
+    // ---------------------------------------------------------
+    private static void eliminarEpisodio() {
+        listarEpisodios();
+
+        if (episodios.isEmpty()) return;
+
+        System.out.print("\nNúmero a eliminar: ");
+        int pos = sc.nextInt();
+        sc.nextLine();
+
+        if (pos < 1 || pos > episodios.size()) {
+            System.out.println("Índice inválido.");
+            return;
+        }
+
+        episodios.remove(pos - 1);
+
+        System.out.println("Episodio eliminado.");
     }
 }
