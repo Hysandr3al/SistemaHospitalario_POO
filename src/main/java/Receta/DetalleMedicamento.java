@@ -8,6 +8,7 @@ public class DetalleMedicamento {
     private char tipoReceta; //H o E
     private int idReceta;
 
+    public DetalleMedicamento(){}
     public DetalleMedicamento(Medicamento medicamento, int cantidad){
         this.medicamento = medicamento;
         this.cantidad = cantidad;
@@ -15,6 +16,9 @@ public class DetalleMedicamento {
 
     public Medicamento getMedicamento(){
         return medicamento;
+    }
+    public void setMedicamento(Medicamento m){
+        this.medicamento = m;
     }
 
     public int getCantidad(){

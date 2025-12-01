@@ -2,7 +2,6 @@ package dao;
 
 import Conexion.ConexionDB;
 import Farmacia.RecetaMedicaExterna;
-import Receta.RecetaMedicaHospital;
 
 import java.sql.*;
 import java.util.ArrayList;
