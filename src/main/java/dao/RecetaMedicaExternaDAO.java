@@ -59,7 +59,7 @@ public class RecetaMedicaExternaDAO {
         return null;
     }
 
-     public List<RecetaMedicaExterna> listar(){
+    public List<RecetaMedicaExterna> listar(){
         List<RecetaMedicaExterna> lista = new ArrayList<>();
         String sql = "SELECT * FROM RecetaMedicaExterna";
 

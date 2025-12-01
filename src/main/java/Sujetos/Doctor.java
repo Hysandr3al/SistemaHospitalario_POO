@@ -1,5 +1,10 @@
 package Sujetos;
 
+import java.util.List;
+
+import Receta.DetalleMedicamento;
+import Receta.RecetaMedicaHospital;
+
 public class Doctor extends Persona{
     private String especialidad;
     private String horario;
@@ -17,8 +22,13 @@ public class Doctor extends Persona{
         this.salario = salario;
     }
 
-    public RecetaMedica crearRecetaMedica(Paciente paciente){
-        return;
+    public RecetaMedicaHospital crearRecetaMedica(Paciente p, List<DetalleMedicamento> d){
+        RecetaMedicaHospital receta = new RecetaMedicaHospital();
+
+        receta.setDoctor(this);
+        receta.setPaciente(p);
+        receta.setDetallesMedicamento(d);
+        return receta;
     }
 
     public String getEspecialidad(){
