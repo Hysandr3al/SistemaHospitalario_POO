@@ -1,16 +1,15 @@
 package Receta;
 
 import Sujetos.Paciente;
-
-import java.util.List;
-
 import Sujetos.Doctor;
+import java.util.List;
 
 public class RecetaMedicaHospital extends RecetaMedica {
     private int idReceta;
     private Doctor doctor;
     private Paciente paciente;
     private int idRecetaHospital;
+    private List<DetalleMedicamento> detallesMedicamentos;
 
     public RecetaMedicaHospital(){
     }
@@ -49,5 +48,12 @@ public class RecetaMedicaHospital extends RecetaMedica {
         this.idRecetaHospital = idRecetaHospital;
     }
     
+    public List<DetalleMedicamento> getDetallesMedicamento() {
+        return detallesMedicamentos;
+    }
+
+    public void setDetallesMedicamento(List<DetalleMedicamento> detallesMedicamento) {
+        this.detallesMedicamentos = detallesMedicamento;
+    }
 
 }
