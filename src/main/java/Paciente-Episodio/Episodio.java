@@ -4,7 +4,7 @@ import java.time.LocalDate;
 
 public abstract class Episodio {
 
-    protected int idEpisodio;     // ← NECESARIO PARA EL DAO
+    protected int idEpisodio;
     protected String descripcion;
     protected LocalDate fecha;
 
@@ -13,16 +13,28 @@ public abstract class Episodio {
         this.fecha = LocalDate.now();
     }
 
+    // Constructor con ID (para el DAO)
+    public Episodio(int idEpisodio, String descripcion, LocalDate fecha) {
+        this.idEpisodio = idEpisodio;
+        this.descripcion = descripcion;
+        this.fecha = fecha;
+    }
+
+    // Getters y Setters
     public int getIdEpisodio() {
         return idEpisodio;
     }
 
-    public void setIdEpisodio(int id) {   // ← El DAO lo colocará
-        this.idEpisodio = id;
+    public void setIdEpisodio(int idEpisodio) {
+        this.idEpisodio = idEpisodio;
     }
 
     public String getDescripcion() {
         return descripcion;
+    }
+
+    public void setDescripcion(String descripcion) {
+        this.descripcion = descripcion;
     }
 
     public LocalDate getFecha() {

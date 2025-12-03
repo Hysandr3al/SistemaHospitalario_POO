@@ -1,6 +1,7 @@
 package hospital.pacienteepisodio;
 
 public class Cirugia extends Episodio {
+
     private String tipo;
 
     public Cirugia(String descripcion, String tipo) {
@@ -8,8 +9,21 @@ public class Cirugia extends Episodio {
         this.tipo = tipo;
     }
 
+    public Cirugia(int id, String descripcion, String tipo, java.time.LocalDate fecha) {
+        super(id, descripcion, fecha);
+        this.tipo = tipo;
+    }
+
+    public String getTipo() {
+        return tipo;
+    }
+
+    public void setTipo(String tipo) {
+        this.tipo = tipo;
+    }
+
     @Override
     public String toString() {
-        return "Cirugia: " + descripcion + " (" + fecha + ") - Tipo: " + tipo;
+        return "Cirugía: " + descripcion + " (" + fecha + ") - Tipo: " + tipo;
     }
 }

@@ -1,60 +1,125 @@
-package hospital.pacienteepisodio;
+package pacienteepisodio;
 
-import java.util.ArrayList;
+import dao.PacienteDAO;
+import dao.EpisodioDAO;
+
+import Sujetos.Paciente;
+import hospital.pacienteepisodio.*;
+
 import java.util.Scanner;
 
-public class MenuEpisodio {
+public class Menu {
 
-    private static Scanner sc = new Scanner(System.in);
+    private static final Scanner sc = new Scanner(System.in);
 
-    // Episodios almacenados temporalmente (sin BD todavía)
-    private static ArrayList<Episodio> episodios = new ArrayList<>();
-
-    // DAOs independientes
-    private static CitaAmbulatoriaDAO citaDAO = new CitaAmbulatoriaDAO();
-    private static HospitalizacionDAO hospDAO = new HospitalizacionDAO();
-    private static CirugiaDAO cirDAO = new CirugiaDAO();
-    private static UrgenciaDAO urgDAO = new UrgenciaDAO();
+    // DAOs
+    private static final PacienteDAO pacienteDAO = new PacienteDAO();
+    private static final EpisodioDAO episodioDAO = new EpisodioDAO();
 
     public static void main(String[] args) {
 
         int opcion;
 
         do {
-            System.out.println("\n=== CRUD DE EPISODIOS (SIN EpisodioListDAO) ===");
-            System.out.println("1. Registrar episodio");
-            System.out.println("2. Listar episodios");
-            System.out.println("3. Editar descripción de un episodio");
-            System.out.println("4. Eliminar episodio");
+            System.out.println("\n=== SISTEMA HOSPITALARIO – MÓDULO PACIENTE & EPISODIOS ===");
+            System.out.println("1. Registrar Paciente (BD)");
+            System.out.println("2. Buscar Paciente por ID");
+            System.out.println("3. Registrar Episodio (BD)");
+            System.out.println("4. Mostrar Historia Clínica desde BD");
             System.out.println("0. Salir");
-            System.out.print("Seleccione una opción: ");
+            System.out.print("Seleccione opción: ");
 
             opcion = sc.nextInt();
             sc.nextLine();
 
             switch (opcion) {
-                case 1 -> registrarEpisodio();
-                case 2 -> listarEpisodios();
-                case 3 -> editarEpisodio();
-                case 4 -> eliminarEpisodio();
-                case 0 -> System.out.println("Saliendo...");
-                default -> System.out.println("Opción no válida.");
+                case 1 -> registrarPacienteBD();
+                case 2 -> buscarPacienteBD();
+                case 3 -> registrarEpisodioBD();
+                case 4 -> mostrarHistoriaClinicaBD();
+                case 0 -> System.out.println("Cerrando sistema...");
+                default -> System.out.println("Opción inválida.");
             }
 
         } while (opcion != 0);
     }
 
-    // ---------------------------------------------------------
-    // REGISTRAR
-    // ---------------------------------------------------------
-    private static void registrarEpisodio() {
+    // ============================================================
+    // 1. Registrar Paciente en BD
+    // ============================================================
+    private static void registrarPacienteBD() {
 
-        System.out.println("\n--- Elegir tipo de episodio ---");
+        System.out.print("Nombres: ");
+        String n = sc.nextLine();
+
+        System.out.print("Apellidos: ");
+        String a = sc.nextLine();
+
+        System.out.print("Teléfono: ");
+        String t = sc.nextLine();
+
+        System.out.print("DNI: ");
+        String dni = sc.nextLine();
+
+        System.out.print("Sexo: ");
+        String sexo = sc.nextLine();
+
+        System.out.print("Edad: ");
+        int edad = sc.nextInt();
+        sc.nextLine();
+
+        System.out.print("Grupo sanguíneo: ");
+        String gs = sc.nextLine();
+
+        System.out.print("Alergias: ");
+        String al = sc.nextLine();
+
+        System.out.print("Dirección: ");
+        String dir = sc.nextLine();
+
+        Paciente p = new Paciente(n, a, t, dni, sexo, edad, gs, al, 0, dir);
+
+        if (pacienteDAO.registrar(p)) {
+            System.out.println("✔ Paciente registrado en BD.");
+        } else {
+            System.out.println("✘ Error al registrar paciente.");
+        }
+    }
+
+    // ============================================================
+    // 2. Buscar paciente por ID
+    // ============================================================
+    private static Paciente buscarPacienteBD() {
+        System.out.print("Ingrese ID del Paciente: ");
+        int id = sc.nextInt();
+
+        Paciente p = pacienteDAO.buscarPorId(id);
+
+        if (p == null) {
+            System.out.println("✘ Paciente no encontrado.");
+        } else {
+            System.out.println("✔ Paciente encontrado:");
+            p.mostrarInfo();
+        }
+
+        return p;
+    }
+
+    // ============================================================
+    // 3. Registrar un episodio en BD
+    // ============================================================
+    private static void registrarEpisodioBD() {
+
+        Paciente p = buscarPacienteBD();
+
+        if (p == null) return;
+
+        System.out.println("\n--- Registrar Episodio ---");
         System.out.println("1. Cita Ambulatoria");
         System.out.println("2. Hospitalización");
         System.out.println("3. Cirugía");
         System.out.println("4. Urgencia");
-        System.out.print("Tipo: ");
+        System.out.print("Seleccione tipo: ");
 
         int tipo = sc.nextInt();
         sc.nextLine();
@@ -62,107 +127,60 @@ public class MenuEpisodio {
         System.out.print("Descripción: ");
         String desc = sc.nextLine();
 
-        Episodio epi = null;
+        Episodio ep = null;
 
         switch (tipo) {
-            case 1 -> {
-                epi = new CitaAmbulatoria(desc);
-                citaDAO.registrar((CitaAmbulatoria) epi);
-            }
+            case 1 -> ep = new CitaAmbulatoria(desc);
+
             case 2 -> {
                 System.out.print("Número de cama: ");
                 int cama = sc.nextInt();
                 sc.nextLine();
-                epi = new Hospitalizacion(desc, cama);
-                hospDAO.registrar((Hospitalizacion) epi);
+                ep = new Hospitalizacion(desc, cama);
             }
+
             case 3 -> {
                 System.out.print("Tipo de cirugía: ");
-                String tipoC = sc.nextLine();
-                epi = new Cirugia(desc, tipoC);
-                cirDAO.registrar((Cirugia) epi);
+                String tc = sc.nextLine();
+                ep = new Cirugia(desc, tc);
             }
+
             case 4 -> {
                 System.out.print("Triage: ");
-                String tri = sc.nextLine();
-                epi = new Urgencia(desc, tri);
-                urgDAO.registrar((Urgencia) epi);
+                String triage = sc.nextLine();
+                ep = new Urgencia(desc, triage);
             }
+
             default -> {
-                System.out.println("Tipo no válido.");
+                System.out.println("Tipo inválido.");
                 return;
             }
         }
 
-        episodios.add(epi);
-
-        System.out.println("Episodio registrado.");
+        if (episodioDAO.registrar(ep, p.getIdPaciente())) {
+            System.out.println("✔ Episodio registrado en BD.");
+        } else {
+            System.out.println("✘ Error al registrar episodio.");
+        }
     }
 
-    // ---------------------------------------------------------
-    // LISTAR
-    // ---------------------------------------------------------
-    private static void listarEpisodios() {
-        System.out.println("\n--- LISTA DE EPISODIOS ---");
+    // ============================================================
+    // 4. Mostrar historia clínica desde BD
+    // ============================================================
+    private static void mostrarHistoriaClinicaBD() {
 
-        if (episodios.isEmpty()) {
+        Paciente p = buscarPacienteBD();
+        if (p == null) return;
+
+        System.out.println("\n=== HISTORIA CLÍNICA DE: " + p.getNombres() + " ===");
+
+        var lista = episodioDAO.listarPorPaciente(p.getIdPaciente());
+
+        if (lista.isEmpty()) {
             System.out.println("No hay episodios registrados.");
             return;
         }
 
-        int i = 1;
-        for (Episodio e : episodios) {
-            System.out.println(i + ". " + e);
-            i++;
-        }
-    }
-
-    // ---------------------------------------------------------
-    // EDITAR
-    // ---------------------------------------------------------
-    private static void editarEpisodio() {
-        listarEpisodios();
-
-        if (episodios.isEmpty()) return;
-
-        System.out.print("\nSeleccione número: ");
-        int pos = sc.nextInt();
-        sc.nextLine();
-
-        if (pos < 1 || pos > episodios.size()) {
-            System.out.println("Índice inválido.");
-            return;
-        }
-
-        Episodio e = episodios.get(pos - 1);
-
-        System.out.print("Nueva descripción: ");
-        String nueva = sc.nextLine();
-
-        e.descripcion = nueva;
-
-        System.out.println("Episodio actualizado.");
-    }
-
-    // ---------------------------------------------------------
-    // ELIMINAR
-    // ---------------------------------------------------------
-    private static void eliminarEpisodio() {
-        listarEpisodios();
-
-        if (episodios.isEmpty()) return;
-
-        System.out.print("\nNúmero a eliminar: ");
-        int pos = sc.nextInt();
-        sc.nextLine();
-
-        if (pos < 1 || pos > episodios.size()) {
-            System.out.println("Índice inválido.");
-            return;
-        }
-
-        episodios.remove(pos - 1);
-
-        System.out.println("Episodio eliminado.");
+        lista.forEach(ep -> System.out.println(" - " + ep));
     }
 }
