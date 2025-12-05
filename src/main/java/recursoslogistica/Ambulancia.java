@@ -1,10 +1,6 @@
 package recursoslogistica;
 
-
-// HERENCIA: Ambulancia hereda de Recurso
 public class Ambulancia extends Recurso {
-    
-    // ATRIBUTOS PROPIOS (solo de ambulancia, no de otros recursos)
     
     private String placa;
     private String tipoAmbulancia;
@@ -29,9 +25,13 @@ public class Ambulancia extends Recurso {
         System.out.println("Ambulancia " + placa + " regreso al hospital");
     }
 
-    public String getPlaca() {
-        return placa;
-    }
+    // --- MÉTODOS GETTERS Y SETTERS NECESARIOS PARA EL DAO ---
+    public String getPlaca() { return placa; }
+    
+    public String getTipoAmbulancia() { return tipoAmbulancia; }
+    
+    public String getUbicacionActual() { return ubicacionActual; }
+    public void setUbicacionActual(String ubicacionActual) { this.ubicacionActual = ubicacionActual; }
 
     @Override
     public String toString() {

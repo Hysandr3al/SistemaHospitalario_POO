@@ -10,14 +10,14 @@ public class Main {
         System.out.println(" ________________________________________________");
         System.out.println("|                                                |");
         System.out.println("|        MODULO C - RECURSOS Y LOGISTICA         |");
-        System.out.println("|        Sistema Hospitalario POO - Harol        |");
+        System.out.println("|      Sistema Hospitalario POO - SQL Server     |");
         System.out.println("|________________________________________________|");
         System.out.println();
 
-        // Inicializar datos de ejemplo
+        // 1. Inicializar datos (Solo si la BD esta vacia)
         inicializarSistema();
 
-        // Mostrar menú principal
+        // Mostrar menu principal
         int opcion;
         do {
             mostrarMenuPrincipal();
@@ -25,36 +25,26 @@ public class Main {
             procesarOpcion(opcion);
         } while (opcion != 0);
 
-        System.out.println("\n¡Gracias por usar el sistema! Hasta pronto.");
+        System.out.println("\nGracias por usar el sistema! Hasta pronto.");
         scanner.close();
     }
 
     private static void inicializarSistema() {
-        System.out.println("  Inicializando sistema...\n");
-
+        System.out.println("  Verificando conexion y datos en Base de Datos...\n");
+        
         // Ambulancias
-        Ambulancia amb1 = new Ambulancia("AMB001", "ABC-123", "Medicalizada");
-        Ambulancia amb2 = new Ambulancia("AMB002", "DEF-456", "Basica");
-        Ambulancia amb3 = new Ambulancia("AMB003", "GHI-789", "UCI Movil");
-        gestor.agregarAmbulancia(amb1);
-        gestor.agregarAmbulancia(amb2);
-        gestor.agregarAmbulancia(amb3);
+        gestor.agregarAmbulancia(new Ambulancia("AMB001", "ABC-123", "Medicalizada"));
+        gestor.agregarAmbulancia(new Ambulancia("AMB002", "DEF-456", "Basica"));
+        gestor.agregarAmbulancia(new Ambulancia("AMB003", "GHI-789", "UCI Movil"));
 
         // Insumos
-        Insumo guantes = new Insumo("INS001", "Guantes de latex", CategoriaInsumo.DESECHABLE, 500, 100);
-        Insumo oxigeno = new Insumo("INS002", "Tanque de oxigeno", CategoriaInsumo.OXIGENO, 15, 5);
-        Insumo jeringas = new Insumo("INS003", "Jeringas 10ml", CategoriaInsumo.DESECHABLE, 200, 100);
-        Insumo mascarillas = new Insumo("INS004", "Mascarillas N95", CategoriaInsumo.DESECHABLE, 300, 50);
-        Insumo suero = new Insumo("INS005", "Suero fisiologico", CategoriaInsumo.MEDICAMENTO, 150, 30);
-        gestor.agregarInsumo(guantes);
-        gestor.agregarInsumo(oxigeno);
-        gestor.agregarInsumo(jeringas);
-        gestor.agregarInsumo(mascarillas);
-        gestor.agregarInsumo(suero);
+        gestor.agregarInsumo(new Insumo("INS001", "Guantes de latex", CategoriaInsumo.DESECHABLE, 500, 100));
+        gestor.agregarInsumo(new Insumo("INS002", "Tanque de oxigeno", CategoriaInsumo.OXIGENO, 15, 5));
+        gestor.agregarInsumo(new Insumo("INS003", "Jeringas 10ml", CategoriaInsumo.DESECHABLE, 200, 100));
+        gestor.agregarInsumo(new Insumo("INS004", "Mascarillas N95", CategoriaInsumo.DESECHABLE, 300, 50));
+        gestor.agregarInsumo(new Insumo("INS005", "Suero fisiologico", CategoriaInsumo.MEDICAMENTO, 150, 30));
 
-        System.out.println("- 3 ambulancias registradas");
-        System.out.println("- 5 insumos registrados");
-        System.out.println();
+        System.out.println("\nCarga inicial completada.");
         esperarEnter();
     }
 
@@ -65,7 +55,7 @@ public class Main {
         System.out.println("|  1.  Gestion de Ambulancias                             |");
         System.out.println("|  2.  Gestion de Inventario                              |");
         System.out.println("|  3.  Gestion de Pedidos                                 |");
-        System.out.println("|  4.  Ver Reporte Completo                               |");
+        System.out.println("|  4.  Ver Reporte Completo (Desde BD)                    |");
         System.out.println("|  0.  Salir                                              |");
         System.out.println("|_________________________________________________________|");
         System.out.print("Seleccione una opcion: ");
@@ -74,28 +64,19 @@ public class Main {
     private static void procesarOpcion(int opcion) {
         System.out.println();
         switch (opcion) {
-            case 1:
-                menuAmbulancia();
-                break;
-            case 2:
-                menuInventario();
-                break;
-            case 3:
-                menuPedidos();
-                break;
-            case 4:
+            case 1 -> menuAmbulancia();
+            case 2 -> menuInventario();
+            case 3 -> menuPedidos();
+            case 4 -> {
                 gestor.generarReporte();
                 esperarEnter();
-                break;
-            case 0:
-                // Salir
-                break;
-            default:
-                System.out.println(" Opción inválida. Intente de nuevo.");
+            }
+            case 0 -> {}
+            default -> System.out.println(" Opcion invalida. Intente de nuevo.");
         }
     }
 
-    // ========== MENÚ AMBULANCIAS ==========
+    // ========== MENU AMBULANCIAS ==========
     private static void menuAmbulancia() {
         System.out.println(" _____________________________________________________");
         System.out.println("|                GESTION DE AMBULANCIAS               |");
@@ -111,35 +92,20 @@ public class Main {
         System.out.println();
 
         switch (opcion) {
-            case 1:
-                verAmbulancias();
-                break;
-            case 2:
-                solicitarAmbulancia();
-                break;
-            case 3:
-                finalizarCorrida();
-                break;
-            case 0:
-                return;
-            default:
-                System.out.println("Opcion invalida.");
+            case 1 -> gestor.generarReporte();
+            case 2 -> solicitarAmbulancia();
+            case 3 -> finalizarCorrida();
+            case 0 -> { return; }
+            default -> System.out.println("Opcion invalida.");
         }
         esperarEnter();
-    }
-
-    private static void verAmbulancias() {
-        System.out.println("--- AMBULANCIAS EN EL SISTEMA ---\n");
-        // Aquí accederíamos a la lista, pero como es privada, 
-        // mostramos mensaje genérico
-        System.out.println("Para ver el reporte completo, use la opcion 4 del menu principal.");
     }
 
     private static void solicitarAmbulancia() {
         System.out.println("--- SOLICITAR AMBULANCIA PARA EMERGENCIA ---\n");
         
         System.out.print("Ingrese direccion de la emergencia: ");
-        scanner.nextLine(); // Limpiar buffer
+        scanner.nextLine(); 
         String direccion = scanner.nextLine();
 
         System.out.print("Ingrese motivo de la emergencia: ");
@@ -148,7 +114,12 @@ public class Main {
         Ambulancia amb = gestor.solicitarAmbulancia();
         
         if (amb != null) {
+            // 1. Actualizamos el objeto en memoria
             amb.asignarCorrida(direccion);
+            
+            // 2. IMPORTANTE: Guardamos el cambio en SQL Server
+            gestor.guardarCambiosAmbulancia(amb);
+            
             System.out.println("\n " + amb);
             System.out.println(" Destino: " + direccion);
             System.out.println(" Motivo: " + motivo);
@@ -159,23 +130,22 @@ public class Main {
 
     private static void finalizarCorrida() {
         System.out.println("--- FINALIZAR CORRIDA ---\n");
-        System.out.print("Ingrese placa de la ambulancia: ");
-        scanner.nextLine(); // Limpiar buffer
+        System.out.println("(Nota: En un sistema real buscariamos por placa)");
+        
+        System.out.print("Ingrese placa de la ambulancia a liberar: ");
+        scanner.nextLine();
         String placa = scanner.nextLine();
-
-        // Simulación de finalización
-        System.out.println("\n Corrida finalizada para ambulancia " + placa);
-        System.out.println("Ambulancia regreso al hospital");
+        
+        System.out.println("Funcionalidad simplificada: Liberando ambulancia...");
     }
 
-    // ========== MENÚ INVENTARIO ==========
+    // ========== MENU INVENTARIO ==========
     private static void menuInventario() {
         System.out.println(" ____________________________________________________________");
         System.out.println("|                  GESTION DE INVENTARIO                     |");
         System.out.println("|____________________________________________________________|");
         System.out.println("|  1. Ver stock de insumos                                   |");
         System.out.println("|  2. Agregar stock a un insumo                              |");
-        System.out.println("|  3. Ver alertas de stock bajo                              |");
         System.out.println("|  0. Volver al menu principal                               |");
         System.out.println("|____________________________________________________________|");
         System.out.print("Seleccione una opcion: ");
@@ -184,61 +154,25 @@ public class Main {
         System.out.println();
 
         switch (opcion) {
-            case 1:
-                verInventario();
-                break;
-            case 2:
-                agregarStock();
-                break;
-            case 3:
-                verAlertas();
-                break;
-            case 0:
-                return;
-            default:
-                System.out.println("Opción invalida.");
+            case 1 -> gestor.generarReporte();
+            case 2 -> agregarStock();
+            case 0 -> { return; }
+            default -> System.out.println("Opcion invalida.");
         }
         esperarEnter();
     }
 
-    private static void verInventario() {
-        System.out.println("--- STOCK DE INSUMOS ---\n");
-        System.out.println("Para ver el inventario completo, use la opcion 4 del menu principal.");
-    }
-
     private static void agregarStock() {
-        System.out.println("--- AGREGAR STOCK A INSUMO ---\n");
-        System.out.println("Codigos disponibles:");
-        System.out.println("INS001 - Guantes de latex");
-        System.out.println("INS002 - Tanque de oxigeno");
-        System.out.println("INS003 - Jeringas 10ml");
-        System.out.println("INS004 - Mascarillas N95");
-        System.out.println("INS005 - Suero fisiologico");
-        
-        System.out.print("\nIngrese código del insumo: ");
-        scanner.nextLine(); // Limpiar buffer
-        String codigo = scanner.nextLine().toUpperCase();
-
-        System.out.print("Ingrese cantidad a agregar: ");
-        int cantidad = leerOpcion();
-
-        System.out.println("\n Se agregaron " + cantidad + " unidades al insumo " + codigo);
+        System.out.println("--- AGREGAR STOCK A INSUMO (NO IMPLEMENTADO EN BD AUN) ---\n");
+        System.out.println("Esta funcion requiere actualizar el Gestor para llamar a insumoDAO.modificar()");
     }
 
-    private static void verAlertas() {
-        System.out.println("--- ALERTAS DE STOCK BAJO ---\n");
-        System.out.println("Verificando insumos con stock bajo...\n");
-        System.out.println("Use el reporte completo (opcion 4) para ver detalles.");
-    }
-
-    // ========== MENÚ PEDIDOS ==========
+    // ========== MENU PEDIDOS ==========
     private static void menuPedidos() {
         System.out.println(" ____________________________________________________________");
-        System.out.println("|                                                            |");
         System.out.println("|                  GESTION DE PEDIDOS                        |");
         System.out.println("|------------------------------------------------------------|");
         System.out.println("|  1. Crear nuevo pedido                                     |");
-        System.out.println("|  2. Ver pedidos recientes                                  |");
         System.out.println("|  0. Volver al menu principal                               |");
         System.out.println("|____________________________________________________________|");
         System.out.print("Seleccione una opcion: ");
@@ -247,16 +181,9 @@ public class Main {
         System.out.println();
 
         switch (opcion) {
-            case 1:
-                crearPedido();
-                break;
-            case 2:
-                verPedidos();
-                break;
-            case 0:
-                return;
-            default:
-                System.out.println("Opcion invalida.");
+            case 1 -> crearPedido();
+            case 0 -> { return; }
+            default -> System.out.println("Opcion invalida.");
         }
         esperarEnter();
     }
@@ -265,33 +192,28 @@ public class Main {
         System.out.println("--- CREAR NUEVO PEDIDO ---\n");
         
         System.out.print("Departamento solicitante: ");
-        scanner.nextLine(); // Limpiar buffer
+        scanner.nextLine(); 
         String departamento = scanner.nextLine();
 
-        System.out.println("\nCodigos disponibles:");
-        System.out.println("INS001 - Guantes de latex");
-        System.out.println("INS002 - Tanque de oxígeno");
-        System.out.println("INS003 - Jeringas 10ml");
-        System.out.println("INS004 - Mascarillas N95");
-        System.out.println("INS005 - Suero fisiologico");
-        
-        System.out.print("\nCodigo del insumo: ");
+        System.out.println("\nEjemplos de codigos: INS001, INS002, INS003...");
+        System.out.print("Codigo del insumo: ");
         String codigo = scanner.nextLine().toUpperCase();
 
         System.out.print("Cantidad solicitada: ");
         int cantidad = leerOpcion();
 
         System.out.println("\n--- PROCESANDO PEDIDO ---");
+        // El gestor ahora busca en BD, verifica stock, descuenta y guarda en BD
         Pedido pedido = gestor.crearPedido(departamento, codigo, cantidad);
         
         if (pedido != null) {
-            pedido.procesar();
+            if(pedido.isAprobado()){
+                System.out.println("PEDIDO APROBADO y stock actualizado en BD!");
+                System.out.println(pedido);
+            } else {
+                System.out.println("PEDIDO RECHAZADO (Stock insuficiente).");
+            }
         }
-    }
-
-    private static void verPedidos() {
-        System.out.println("--- PEDIDOS RECIENTES ---\n");
-        System.out.println("Para ver el historial completo, use la opcion 4 del menu principal.");
     }
 
     // ========== UTILIDADES ==========
@@ -299,7 +221,7 @@ public class Main {
         try {
             return scanner.nextInt();
         } catch (Exception e) {
-            scanner.nextLine(); // Limpiar buffer
+            scanner.nextLine(); 
             return -1;
         }
     }
@@ -308,9 +230,7 @@ public class Main {
         System.out.println("\nPresione ENTER para continuar...");
         try {
             System.in.read();
-            scanner.nextLine(); // Limpiar buffer
-        } catch (Exception e) {
-            // Ignorar
-        }
+            scanner.nextLine(); 
+        } catch (Exception e) {}
     }
 }

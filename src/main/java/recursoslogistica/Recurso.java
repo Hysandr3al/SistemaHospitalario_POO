@@ -1,11 +1,11 @@
 package recursoslogistica;
 
-
-//Clase abstracta base
-
 import java.time.LocalDate;
 
 public abstract class Recurso {
+    // 1. AGREGAR ESTE CAMPO ID
+    protected int id; 
+    
     protected String codigo;
     protected String nombre;
     protected EstadoRecurso estado;
@@ -18,21 +18,15 @@ public abstract class Recurso {
         this.fechaRegistro = LocalDate.now();
     }
 
-    public String getCodigo() {
-        return codigo;
-    }
+    // 2. AGREGAR GETTER Y SETTER PARA EL ID
+    public int getId() { return id; }
+    public void setId(int id) { this.id = id; }
 
-    public String getNombre() {
-        return nombre;
-    }
-
-    public EstadoRecurso getEstado() {
-        return estado;
-    }
-
-    public void setEstado(EstadoRecurso estado) {
-        this.estado = estado;
-    }
+    // ... (El resto de tus getters y toString déjalos igual) ...
+    public String getCodigo() { return codigo; }
+    public String getNombre() { return nombre; }
+    public EstadoRecurso getEstado() { return estado; }
+    public void setEstado(EstadoRecurso estado) { this.estado = estado; }
 
     @Override
     public abstract String toString();

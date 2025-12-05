@@ -39,13 +39,13 @@ public class Insumo extends Recurso {
         return cantidad <= stockMinimo;
     }
 
-    public int getCantidad() {
-        return cantidad;
-    }
+    // --- GETTERS NECESARIOS PARA EL DAO (Base de Datos) ---
+    public int getCantidad() { return cantidad; }
+    public void setCantidad(int cantidad) { this.cantidad = cantidad; } // Necesario para cargar desde BD
 
-    public CategoriaInsumo getCategoria() {
-        return categoria;
-    }
+    public CategoriaInsumo getCategoria() { return categoria; }
+    
+    public int getStockMinimo() { return stockMinimo; } // Este faltaba
 
     @Override
     public String toString() {
