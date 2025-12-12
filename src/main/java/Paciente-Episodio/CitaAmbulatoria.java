@@ -6,8 +6,12 @@ public class CitaAmbulatoria extends Episodio {
         super(descripcion);
     }
 
+    public CitaAmbulatoria(int id, String descripcion, java.time.LocalDate fecha) {
+        super(id, descripcion, fecha);
+    }
+
     @Override
     public String toString() {
-        return "CitaAmbulatoria: " + descripcion + " (" + fecha + ")";
+        return "Cita Ambulatoria: " + descripcion + " (" + fecha + ")";
     }
 }
