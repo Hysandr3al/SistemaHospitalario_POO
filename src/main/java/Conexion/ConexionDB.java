@@ -6,19 +6,21 @@ import java.sql.SQLException;
 
 public class ConexionDB {
 
-    // CAMBIO CLAVE: Usamos 127.0.0.1 en lugar de localhost
+    
     private static final String URL = "jdbc:sqlserver://127.0.0.1:1433;databaseName=Hospital;encrypt=false;trustServerCertificate=true;";
     private static final String USER = "sa";
     private static final String PASSWORD = "12345"; 
 
-    public static Connection getConnection() {
-        Connection con = null;
+    
+    public static Connection getConnection() throws SQLException {
         try {
-            con = DriverManager.getConnection(URL, USER, PASSWORD);
+            Connection con = DriverManager.getConnection(URL, USER, PASSWORD);
             System.out.println("Conexion exitosa a la BD Hospital.");
+            return con;
         } catch (SQLException e) {
-            System.out.println("Error al conectar a la BD: " + e.getMessage());
+            
+            System.err.println("ERROR FATAL DE CONEXION: " + e.getMessage());
+            throw e; 
         }
-        return con;
     }
 }

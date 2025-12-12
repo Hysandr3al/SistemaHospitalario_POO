@@ -19,7 +19,7 @@ public class GestorRecursos {
     }
 
     public void agregarAmbulancia(Ambulancia ambulancia) {
-        // Intentamos registrar. Si falla (ej. placa repetida), el DAO devuelve false.
+        
         if (ambulanciaDAO.registrar(ambulancia)) {
             System.out.println("-> Ambulancia " + ambulancia.getPlaca() + " guardada en BD.");
         } else {
@@ -45,7 +45,7 @@ public class GestorRecursos {
         return null;
     }
     
-    // Metodo critico para guardar cambios de estado
+    
     public void guardarCambiosAmbulancia(Ambulancia amb) {
         if (ambulanciaDAO.modificar(amb)) {
             System.out.println("   (Estado actualizado en Base de Datos)");
@@ -63,9 +63,9 @@ public class GestorRecursos {
         String numeroPedido = "PED" + String.format("%03d", contadorPedidos++);
         Pedido pedido = new Pedido(numeroPedido, departamento, insumo, cantidad);
         
-        // Si hay stock, procesar() resta la cantidad en el objeto Java
+        
         if (pedido.procesar()) {
-            // Y aqui guardamos esa resta en la Base de Datos
+            
             insumoDAO.modificar(insumo); 
         }
         
@@ -86,5 +86,66 @@ public class GestorRecursos {
         for (Insumo i : inv) System.out.println(" - " + i);
         
         System.out.println("===============================================");
+    }
+    
+    
+    public boolean eliminarAmbulancia(int id) {
+        if (ambulanciaDAO.eliminar(id)) {
+            System.out.println("-> Ambulancia eliminada correctamente de la BD.");
+            return true;
+        } else {
+            System.out.println("-> No se pudo eliminar (verifica el ID).");
+            return false;
+        }
+    }
+
+    public boolean eliminarInsumo(int id) {
+        if (insumoDAO.eliminar(id)) {
+            System.out.println("-> Insumo eliminado correctamente de la BD.");
+            return true;
+        } else {
+            System.out.println("-> No se pudo eliminar (verifica el ID).");
+            return false;
+        }
+    }
+    
+    public boolean liberarAmbulancia(String placa) {
+       
+        List<Ambulancia> flota = ambulanciaDAO.listar();
+        
+        for (Ambulancia amb : flota) {
+            
+            if (amb.getPlaca().equalsIgnoreCase(placa)) {
+                
+                
+                amb.finalizarCorrida(); 
+                
+                
+                if (ambulanciaDAO.modificar(amb)) {
+                    System.out.println("-> Estado actualizado correctamente en BD.");
+                    return true;
+                }
+            }
+        }
+        System.out.println("-> No se encontró una ambulancia con esa placa.");
+        return false;
+    }
+    
+    public boolean sumarStock(String codigo, int cantidad) {
+        
+        Insumo insumo = insumoDAO.buscarPorCodigo(codigo);
+        
+        if (insumo != null) {
+            
+            insumo.agregar(cantidad);
+            
+            
+            if (insumoDAO.modificar(insumo)) {
+                System.out.println("-> Stock actualizado: Ahora hay " + insumo.getCantidad() + " unidades.");
+                return true;
+            }
+        }
+        System.out.println("-> Error: Insumo no encontrado o fallo en BD.");
+        return false;
     }
 }

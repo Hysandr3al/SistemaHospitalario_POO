@@ -3,7 +3,7 @@ package recursoslogistica;
 import java.time.LocalDate;
 
 public abstract class Recurso {
-    // 1. AGREGAR ESTE CAMPO ID
+    
     protected int id; 
     
     protected String codigo;
@@ -18,11 +18,11 @@ public abstract class Recurso {
         this.fechaRegistro = LocalDate.now();
     }
 
-    // 2. AGREGAR GETTER Y SETTER PARA EL ID
+    
     public int getId() { return id; }
     public void setId(int id) { this.id = id; }
 
-    // ... (El resto de tus getters y toString déjalos igual) ...
+    
     public String getCodigo() { return codigo; }
     public String getNombre() { return nombre; }
     public EstadoRecurso getEstado() { return estado; }

@@ -17,17 +17,17 @@ public class AmbulanciaDAO implements InterfazCRUD<Ambulancia> {
             
             ps.setString(1, a.getCodigo());
             ps.setString(2, a.getPlaca());
-            // CORREGIDO: Usar el getter, no texto fijo
+            
             ps.setString(3, a.getTipoAmbulancia()); 
             ps.setString(4, a.getEstado().toString());
-            // CORREGIDO: Usar el getter
+            
             ps.setString(5, a.getUbicacionActual()); 
 
             ps.executeUpdate();
             
             ResultSet rs = ps.getGeneratedKeys();
             if (rs.next()) {
-                a.setId(rs.getInt(1)); // Esto ahora funcionará porque agregamos setId a Recurso
+                a.setId(rs.getInt(1)); 
             }
             return true;
         } catch (SQLException e) {
@@ -50,7 +50,7 @@ public class AmbulanciaDAO implements InterfazCRUD<Ambulancia> {
                     rs.getString("placa"),
                     rs.getString("tipo")
                 );
-                // Asignamos los datos que faltaban
+                
                 a.setId(rs.getInt("idAmbulancia"));
                 a.setEstado(EstadoRecurso.valueOf(rs.getString("estado")));
                 a.setUbicacionActual(rs.getString("ubicacionActual")); 
@@ -63,7 +63,7 @@ public class AmbulanciaDAO implements InterfazCRUD<Ambulancia> {
         return lista;
     }
     
-    // IMPORTANTE: Implementamos este método para que 'asignarCorrida' funcione en la BD
+    
     @Override 
     public boolean modificar(Ambulancia a) { 
         String sql = "UPDATE Ambulancia SET estado=?, ubicacionActual=? WHERE placa=?";
@@ -81,6 +81,50 @@ public class AmbulanciaDAO implements InterfazCRUD<Ambulancia> {
         }
     }
 
-    @Override public boolean eliminar(int id) { return false; }
-    @Override public Ambulancia buscarPorId(int id) { return null; }
+    
+    @Override
+    public boolean eliminar(int id) {
+        String sql = "DELETE FROM Ambulancia WHERE idAmbulancia = ?";
+        try (Connection con = ConexionDB.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+            
+            ps.setInt(1, id);
+            
+            
+            return ps.executeUpdate() > 0;
+            
+        } catch (SQLException e) {
+            System.out.println("Error al eliminar ambulancia: " + e.getMessage());
+            return false;
+        }
+    }
+
+    @Override
+    public Ambulancia buscarPorId(int id) {
+        String sql = "SELECT * FROM Ambulancia WHERE idAmbulancia = ?";
+        try (Connection con = ConexionDB.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+            
+            ps.setInt(1, id);
+            
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                 
+                    Ambulancia a = new Ambulancia(
+                        rs.getString("codigo"),
+                        rs.getString("placa"),
+                        rs.getString("tipo")
+                    );
+                    a.setId(rs.getInt("idAmbulancia"));
+                    a.setEstado(EstadoRecurso.valueOf(rs.getString("estado")));
+                    a.setUbicacionActual(rs.getString("ubicacionActual"));
+                    
+                    return a;
+                }
+            }
+        } catch (SQLException e) {
+            System.out.println("Error al buscar ambulancia por ID: " + e.getMessage());
+        }
+        return null;
+    }
 }

@@ -25,7 +25,7 @@ public class Ambulancia extends Recurso {
         System.out.println("Ambulancia " + placa + " regreso al hospital");
     }
 
-    // --- MÉTODOS GETTERS Y SETTERS NECESARIOS PARA EL DAO ---
+   
     public String getPlaca() { return placa; }
     
     public String getTipoAmbulancia() { return tipoAmbulancia; }

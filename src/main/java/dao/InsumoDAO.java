@@ -45,7 +45,7 @@ public class InsumoDAO implements InterfazCRUD<Insumo> {
              ResultSet rs = ps.executeQuery()) {
             
             while (rs.next()) {
-                // Recuperamos datos
+                
                 String codigo = rs.getString("codigo");
                 String nombre = rs.getString("nombre");
                 String catStr = rs.getString("categoria");
@@ -53,7 +53,7 @@ public class InsumoDAO implements InterfazCRUD<Insumo> {
                 int stockMin = rs.getInt("stockMinimo");
                 String estStr = rs.getString("estado");
 
-                // Creamos objeto (convertimos String a Enum)
+                
                 CategoriaInsumo cat = CategoriaInsumo.valueOf(catStr);
                 
                 Insumo i = new Insumo(codigo, nombre, cat, cant, stockMin);
@@ -70,7 +70,7 @@ public class InsumoDAO implements InterfazCRUD<Insumo> {
 
     @Override
     public boolean modificar(Insumo i) {
-        // Este es VITAL para actualizar el stock cuando haces un pedido
+        
         String sql = "UPDATE Insumo SET cantidad=?, estado=? WHERE codigo=?";
         try (Connection con = ConexionDB.getConnection();
              PreparedStatement ps = con.prepareStatement(sql)) {
@@ -86,10 +86,8 @@ public class InsumoDAO implements InterfazCRUD<Insumo> {
         }
     }
 
-    @Override public boolean eliminar(int id) { return false; }
-    @Override public Insumo buscarPorId(int id) { return null; }
     
-    // Método extra útil para buscar por código (usado al hacer pedidos)
+    
     public Insumo buscarPorCodigo(String codigo) {
         String sql = "SELECT * FROM Insumo WHERE codigo = ?";
         try (Connection con = ConexionDB.getConnection();
@@ -115,4 +113,55 @@ public class InsumoDAO implements InterfazCRUD<Insumo> {
         }
         return null;
     }
+    
+    @Override
+    public boolean eliminar(int id) {
+        String sql = "DELETE FROM Insumo WHERE idInsumo = ?";
+        try (Connection con = ConexionDB.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+            
+            ps.setInt(1, id);
+            
+            
+            return ps.executeUpdate() > 0;
+            
+        } catch (SQLException e) {
+            System.out.println("Error al eliminar insumo: " + e.getMessage());
+            return false;
+        }
+    }
+
+    @Override
+    public Insumo buscarPorId(int id) {
+        String sql = "SELECT * FROM Insumo WHERE idInsumo = ?";
+        try (Connection con = ConexionDB.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+            
+            ps.setInt(1, id);
+            
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    
+                    CategoriaInsumo cat = CategoriaInsumo.valueOf(rs.getString("categoria"));
+                    EstadoRecurso est = EstadoRecurso.valueOf(rs.getString("estado"));
+
+                    Insumo i = new Insumo(
+                        rs.getString("codigo"),
+                        rs.getString("nombre"),
+                        cat,
+                        rs.getInt("cantidad"),
+                        rs.getInt("stockMinimo")
+                    );
+                    i.setId(rs.getInt("idInsumo"));
+                    i.setEstado(est);
+                    
+                    return i;
+                }
+            }
+        } catch (SQLException e) {
+            System.out.println("Error al buscar insumo por ID: " + e.getMessage());
+        }
+        return null;
+    }
+    
 }
