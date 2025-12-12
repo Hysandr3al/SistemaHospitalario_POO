@@ -109,4 +109,71 @@ public class MedicamentoDAO implements InterfazCRUD<Medicamento>{
 
         return lista;
     }
+
+    public boolean actualizarStock(int idMedicamento, int nuevoStock) {
+    String sql = "UPDATE Medicamento SET stock=? WHERE idMedicamento=?";
+    
+    try (Connection con = ConexionDB.getConnection();
+         PreparedStatement ps = con.prepareStatement(sql)) {
+
+        ps.setInt(1, nuevoStock);
+        ps.setInt(2, idMedicamento);
+
+        return ps.executeUpdate() > 0;
+
+    } catch (SQLException e) {
+        System.out.println("Error actualizando stock: " + e.getMessage());
+        return false;
+    }
+}
+
+    public List<Medicamento> listarBajoStock() {
+    List<Medicamento> lista = new ArrayList<>();
+    String sql = "SELECT * FROM Medicamento WHERE stock <= 5"; // considero que 5 es el minimo
+    
+    try (Connection con = ConexionDB.getConnection();
+         PreparedStatement ps = con.prepareStatement(sql);
+         ResultSet rs = ps.executeQuery()) {
+
+        while (rs.next()) {
+            lista.add(mapearMedicamento(rs));
+        }
+
+    } catch (SQLException e) {
+        System.out.println("Error al listar medicamentos con bajo stock: " + e.getMessage());
+    }
+
+    return lista;
+}
+
+    public boolean descontarStock(int idMedicamento, int cantidad) {
+    String sql = "UPDATE Medicamento SET stock = stock - ? WHERE idMedicamento = ? AND stock >= ?";
+
+    try (Connection con = ConexionDB.getConnection();
+         PreparedStatement ps = con.prepareStatement(sql)) {
+
+        ps.setInt(1, cantidad);
+        ps.setInt(2, idMedicamento);
+        ps.setInt(3, cantidad);
+
+        return ps.executeUpdate() > 0;
+
+    } catch (SQLException e) {
+        System.out.println("Error descontando stock: " + e.getMessage());
+        return false;
+    }
+}
+
+    public boolean venderDirecto(int idMedicamento, int cantidad) {
+        if (cantidad <= 0) {
+        System.out.println("Cantidad inválida.");
+        return false;
+        }
+        boolean ok = descontarStock(idMedicamento, cantidad);
+
+        if (!ok) {
+            System.out.println("No se pudo completar la venta: medicamento no existe o stock insuficiente.");
+        }
+    return ok;
+    }
 }
